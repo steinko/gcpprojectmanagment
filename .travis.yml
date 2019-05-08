@@ -1,14 +1,12 @@
 language: minimal
 
-addons:
-  apt:
-    update: true
 
-before-install: 
-  - sudo apt-get install software-properties-common
-  - sudo apt-add-repository --yes --update ppa:ansible/ansible
-  - sudo apt-get install ansible
+before_install: 
+- sudo apt-get update
+- sudo apt-get install software-properties-common
+- sudo apt-add-repository --yes --update ppa:ansible/ansible
+- sudo apt-get install ansible
 
 script:
-  - ansible-playbook --syntax-check CreateProject.yaml
-  - ansible-playbook CreateProject.yaml
+- ansible-playbook --syntax-check CreateProject.yaml
+- ansible-playbook CreateProject.yaml

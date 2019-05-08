@@ -1,0 +1,93 @@
+---
+- name: Create Google Cloud Project
+
+  hosts: localhost
+
+  vars_files:
+    - ./commonvars.yaml
+    
+  vars:
+    servicAccount: servicAccount
+    servicAccountKey:  "{{ servicAccount }}.json"
+    servicAccountEmail: "{{ servicAccount }}@{{ projectId }}.iam.gserviceaccount.com"
+   
+  tasks:
+  - name: create configuration file
+    command: gcloud config configurations create {{ config }}
+    register: createConfigResult
+    ignore_errors: True
+  - debug:
+      msg: "create configuration failed"
+    when: createConfigResult is failed
+    
+  - name: set zone
+    command: gcloud config set compute/zone europe-north1-a
+    register: setZoneResult
+    ignore_errors: True
+  - debug:
+      msg: "set zone failed"
+    when: setZoneResult is failed
+    
+  - name: set account
+    command: gcloud config set account steinkor@gmail.com
+    register: setAccountResult
+    ignore_errors: True
+  - debug:
+      msg: "set account failed"
+    when: setAccountResult is failed
+    
+  - name: create project
+    command: gcloud projects create {{ projectId }} --set-as-default
+    register: createProjectResult
+    ignore_errors: True
+  - debug:
+      msg: "create project failed"
+    when: createProjectResult is failed
+    
+  - name: link billing account
+    command: gcloud beta billing projects link {{ projectId }} --billing-account=0106C7-EB3FD2-559BFC
+    register: linkBillingAccountResult
+    ignore_errors: True
+  - debug:
+      msg: "link billing account failed"
+    when: linkBillingAccountResult is failed
+    
+  - name: enable appengine api
+    command: gcloud services enable appengine.googleapis.com 
+    register: enableAppengieApiResult
+    ignore_errors: True
+  - debug:
+      msg: "enable appengine api failed"
+    when: enableAppengieApiResult is failed
+    
+  - name: enable appengine fleixible api
+    command: gcloud services enable appengineflex.googleapis.com
+    register: enableAppengieFleixibleApiResult
+    ignore_errors: True
+  - debug:
+      msg: "enable appengine fleixible api failed"
+    when: enableAppengieFleixibleApiResult is failed
+    
+  - name: enable appengine cloudbuild api
+    command: gcloud services enable cloudbuild.googleapis.com
+    register: enableAppengieCloudBuildApiResult
+    ignore_errors: True
+  - debug:
+      msg: "enable appengine cloudbuild api failed"
+    when: enableAppengieCloudBuildApiResult is failed
+       
+  - name: create service account 
+    command: gcloud iam service-accounts create {{ servicAccount }}
+    register: createServiceResult
+    ignore_errors: True
+  - debug:
+      msg: "create service account failed"
+    when: createServiceResult is failed
+     
+  - name: autorize service account
+    command: gcloud iam service-accounts keys create --iam-account {{ servicAccountEmail }} {{ servicAccountKey }}
+    register: autorizeServiceResult
+    ignore_errors: True
+  - debug:
+      msg: "autorize service account failed"
+    when: autorizeServiceResult is failed

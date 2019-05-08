@@ -1,0 +1,11 @@
+language: minimal
+
+install: 
+  - apt-get update
+  - apt-get install software-properties-common
+  - apt-add-repository --yes --update ppa:ansible/ansible
+  - apt-get install ansible
+
+script:
+  - ansible-playbook --syntax-check CreateProject.yaml
+  - ansible-playbook CreateProject.yaml

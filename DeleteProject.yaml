@@ -1,0 +1,14 @@
+---
+- name: delete google cloud project
+- hosts: localhost
+  vars_files:
+    - ./commonvars.yaml
+  tasks:
+  - name: delete project
+    command: gcloud projects delete {{ projectId }}
+
+  - name: deactivae coolconfig  
+    command: gcloud config configurations activate default
+
+  - name: delete configuration file
+    command: gcloud config configurations delete {{ config }} --quiet

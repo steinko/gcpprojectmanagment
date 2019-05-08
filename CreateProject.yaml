@@ -1,7 +1,6 @@
 ---
-- name: Create Google Cloud Project
-
-  hosts: localhost
+- hosts: localhost
+  name: Create Google Cloud Project
 
   vars_files:
     - ./commonvars.yaml
